@@ -22,7 +22,7 @@ export class NinjasService {
     }
 
     createNinja(createNinjaDto: CreateNinjaDto) {
-        const newNinja = { id: this.ninjas.length + 1, ...createNinjaDto }
+        const newNinja = { id: this.ninjas.length, ...createNinjaDto }
         this.ninjas.push(newNinja)
         return newNinja
     }
