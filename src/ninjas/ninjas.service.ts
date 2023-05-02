@@ -17,8 +17,10 @@ export class NinjasService {
         return this.ninjas
     }
 
-    getOneNinja(id: string) {
-        return this.ninjas.find(ninja => ninja.id === +id);
+    getOneNinja(id: number) {
+        const ninja = this.ninjas.find(ninja => ninja.id === +id);
+        if(!ninja) throw new Error('Ninja not found')
+        return ninja
     }
 
     createNinja(createNinjaDto: CreateNinjaDto) {
@@ -27,13 +29,13 @@ export class NinjasService {
         return newNinja
     }
 
-    updateNinja(id: string, updateNinjaDto: UpdateNinjaDto) {
+    updateNinja(id: number, updateNinjaDto: UpdateNinjaDto) {
         let ninjaIdx = this.ninjas.findIndex(n => n.id === +id)
         this.ninjas[ninjaIdx] = { ...this.ninjas[ninjaIdx], ...updateNinjaDto }
         return this.ninjas[ninjaIdx]
     }
 
-    removeNinja(id: string) {
+    removeNinja(id: number) {
         this.ninjas = this.ninjas.filter(n => n.id !== +id)
         return {};
     }
