@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Post, Put, Query, ValidationPipe } from '@nestjs/common';
 import { CreateNinjaDto } from './dto/create-ninja.dto';
 import { UpdateNinjaDto } from './dto/update-ninja.dto';
 import { NinjasService } from './ninjas.service';
@@ -18,10 +18,12 @@ export class NinjasController {
 
     // GET /ninjas/:id --> {...}
     // `:id` is extracted from the route params and passed as the variable `id`
+    // id coming from params is string by default
+    // ParseIntPipe is a nest pipe that transform string into number
     @Get(':id')
-    getOneNinja(@Param('id') id: string) {
+    getOneNinja(@Param('id', ParseIntPipe) id: number) {
         try {
-            return this.ninjasService.getOneNinja(+id)
+            return this.ninjasService.getOneNinja(id)
         } catch (error) {
             throw new NotFoundException()
         }
@@ -30,20 +32,20 @@ export class NinjasController {
     // POST /ninjas
     // Body extracted from request and matched with `CreateNinjaDto` type
     @Post()
-    createNinja(@Body() createNinjaDto: CreateNinjaDto) {
+    createNinja(@Body(new ValidationPipe()) createNinjaDto: CreateNinjaDto) {
         return this.ninjasService.createNinja(createNinjaDto)
     }
 
     // PUT /ninjas/:id --> {...}
     // Body extracted from request and matched with `UpdateNinjaDto` type
     @Put(':id')
-    updateNinja(@Param('id') id: string, @Body() updateNinjaDto: UpdateNinjaDto) {
-        return this.ninjasService.updateNinja(+id, updateNinjaDto)
+    updateNinja(@Param('id', ParseIntPipe) id: number, @Body() updateNinjaDto: UpdateNinjaDto) {
+        return this.ninjasService.updateNinja(id, updateNinjaDto)
     }
 
     // DELETE /ninjas/:id
     @Delete(':id')
-    removeNinja(@Param('id') id: string) {
-        return this.ninjasService.removeNinja(+id)
+    removeNinja(@Param('id', ParseIntPipe) id: number) {
+        return this.ninjasService.removeNinja(id)
     }
 }
